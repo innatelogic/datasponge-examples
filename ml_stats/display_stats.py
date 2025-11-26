@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 import logicsponge.core as ls
 import zmq
 from logicsponge.core import dashboard
@@ -24,10 +26,10 @@ class ZeroMQSource(ls.SourceTerm):
 
         return ls.DataItem(message)
 
-    def run(self) -> None:
+    def generate(self) -> Iterator[ls.DataItem]:
         while True:
             message = self.receive()
-            self.output(message)
+            yield message
 
 
 # the circuit
@@ -37,8 +39,10 @@ circuit = (
     * ls.Print()
     * (dashboard.Plot("Loss", x="epoch", y=["loss"]) | dashboard.Plot("Accuracy", x="epoch", y=["accuracy"]))
 )
-circuit.start()
 
 # dashboard
 dashboard.show_stats(circuit)
 dashboard.run()
+
+# start
+circuit.start()

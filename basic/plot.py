@@ -1,4 +1,5 @@
 import time
+from collections.abc import Iterator
 
 import logicsponge.core as ls
 import matplotlib.pyplot as plt
@@ -13,13 +14,13 @@ class Source(ls.SourceTerm):
             "cells": 10,
         }
 
-    def run(self):
+    def generate(self) -> Iterator[ls.DataItem]:
         self.state = {
             "time": 0,
             "cells": 10,
         }
         while True:
-            # send measurmemt
+            # send measurement
             out = ls.DataItem(
                 {
                     "time": self.state["time"],
@@ -27,7 +28,7 @@ class Source(ls.SourceTerm):
                 }
             )
             print("Source: send", out)
-            self.output(out)
+            yield out
 
             # update state
             self.state["time"] += 5

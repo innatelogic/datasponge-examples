@@ -1,6 +1,7 @@
 """Example for a simple source and subsequent compute Term."""
 
 import time
+from collections.abc import Iterator
 from typing import TypedDict
 
 import logicsponge.core as ls
@@ -22,8 +23,8 @@ class Source(ls.SourceTerm):
             "cells": 10,  # / u.mL,
         }
 
-    def run(self) -> None:
-        """Run the source and terminate then."""
+    def generate(self) -> Iterator[ls.DataItem]:
+        """Generate DataItems and terminate after 10 items."""
         for _ in range(10):
             # time to measure...
             time.sleep(0.1)
@@ -35,7 +36,7 @@ class Source(ls.SourceTerm):
                     "cells": self.state["cells"],
                 }
             )
-            self.output(out)
+            yield out
 
             # update state
             self.state["time"] += 5  # * u.min

@@ -1,6 +1,7 @@
 """A simple counter."""
 
 import time
+from collections.abc import Iterator
 
 import logicsponge.core as ls
 from logicsponge.core.logicsponge import Dump
@@ -9,13 +10,13 @@ from logicsponge.core.logicsponge import Dump
 class Source(ls.SourceTerm):
     """A simple source."""
 
-    def run(self) -> None:
-        """Execute the run of the source."""
+    def generate(self) -> Iterator[ls.DataItem]:
+        """Generate DataItems with incrementing count."""
         self.state["count"] = 0
         for _ in range(5):
             out = ls.DataItem({"data": self.state["count"]})
             print("\nSource: send", out)
-            self.output(out)
+            yield out
             self.state["count"] += 1
             time.sleep(2)
 

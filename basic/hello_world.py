@@ -1,14 +1,13 @@
-import time
+from collections.abc import Iterator
 
 import logicsponge.core as ls
 
 
 class Hello(ls.SourceTerm):
-    def run(self):
+    def generate(self) -> Iterator[ls.DataItem]:
         incomplete_message = "Hello"
         out = ls.DataItem({"message": incomplete_message})
-        self.output(out)
-        time.sleep(1)
+        yield out
 
 
 class World(ls.FunctionTerm):
